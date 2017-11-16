@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
+    <ImageTarget name="pop_art" size="1.000000 0.517241" />
+    <ImageTarget name="la-joconde-leonard-de-vinci" size="1.000000 1.514727" />
+    <ImageTarget name="0069_Madonna" size="1.000000 1.000000" />
     <ImageTarget name="ships" size="100.000000 70.703125" />
-    <ImageTarget name="my-neighbour-totoro-studio-ghibli-3010694-1920x1200" size="1000.000000 625.000000" />
   </Tracking>
 </QCARConfig>

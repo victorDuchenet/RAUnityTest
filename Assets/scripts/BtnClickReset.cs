@@ -19,7 +19,7 @@ namespace Assets
         public void ResetOnClick()
         {
             Debug.Log("click done");
-            ScriptVole.Reset();
+           // ScriptVole.Reset();
 
         }
     }

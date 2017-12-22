@@ -4,7 +4,7 @@ using UnityEngine;
 public class Vole : MonoBehaviour
 {
 
-    // Use this for initialization
+   /* // Use this for initialization
     public float MovementSpeed = 0;
     public float RotateSpeed = 0;
     Vector3 _initPosition;
@@ -21,6 +21,7 @@ public class Vole : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("*-----------ship started--------------*");
         _initPosition = gameObject.transform.position;
         Debug.Log(_initPosition);
     }
@@ -38,5 +39,5 @@ public class Vole : MonoBehaviour
         transform.Rotate(Vector3.forward * RotateSpeed * Time.deltaTime);
 
         
-    }
+    }*/
 }

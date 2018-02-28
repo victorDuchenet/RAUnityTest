@@ -1,43 +1,95 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Vuforia;
 
-public class Vole : MonoBehaviour
+namespace scripts
 {
-
-   /* // Use this for initialization
-    public float MovementSpeed = 0;
-    public float RotateSpeed = 0;
-    Vector3 _initPosition;
-    private bool _needReset = false;
-    
-    public void Reset()
+    public class Vole : MonoBehaviour
     {
-        transform.Translate(_initPosition);
-        _needReset = true;
-        Debug.Log("reset reach");
-        Debug.Log(_initPosition);
 
-    }
+        // Use this for initialization
+        public float MovementSpeed = 5;
 
-    void Start()
-    {
-        Debug.Log("*-----------ship started--------------*");
-        _initPosition = gameObject.transform.position;
-        Debug.Log(_initPosition);
-    }
+        public GameObject ImageTagetShip;
+        public float RotateSpeed = 5;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (_needReset)
+
+
+
+        private StateManager _sm;
+        private TrackableBehaviour _trackableBehaviourMadonna;
+        private bool _find;
+
+        private Vector3 _initPosition;
+        private bool _needReset = false;
+
+        public void Reset()
         {
-            transform.position = _initPosition;
-            _needReset = false;
+            transform.Translate(_initPosition);
+            _needReset = true;
         }
-        transform.Translate(Vector3.forward * MovementSpeed * Time.deltaTime);
 
-        transform.Rotate(Vector3.forward * RotateSpeed * Time.deltaTime);
+        public void LeaveApp()
+        {
+            Application.Quit();
+        }
 
-        
-    }*/
+        void Start()
+        {
+            _initPosition = ImageTagetShip.transform.position;
+            _sm = TrackerManager.Instance.GetStateManager();
+
+        }
+        private float time = 5;
+
+        private bool IsGameObjectTracked()
+        {
+            IEnumerable<TrackableBehaviour> activeTrackables = _sm.GetActiveTrackableBehaviours();
+
+            foreach (TrackableBehaviour trackableBehaviour in activeTrackables)
+            {
+                if (trackableBehaviour.gameObject.Equals(ImageTagetShip))
+                {
+                    _trackableBehaviourMadonna = trackableBehaviour;
+                    return true;
+                }
+               
+            }
+            return false;
+        }
+        // Update is called once per frame
+        void Update()
+        {
+            IEnumerable<TrackableBehaviour> activeTrackables = _sm.GetActiveTrackableBehaviours();
+
+            foreach (TrackableBehaviour trackableBehaviour in activeTrackables)
+            {
+                if (trackableBehaviour.gameObject.Equals(ImageTagetShip))
+                {
+                    _trackableBehaviourMadonna = trackableBehaviour;
+                    _find = true;
+                    break;
+                }
+                _find = false;
+            }
+
+            if (_find)
+            {
+                if (_trackableBehaviourMadonna.CurrentStatus == TrackableBehaviour.Status.TRACKED)
+                {
+                    transform.Translate(Vector3.forward * MovementSpeed * Time.deltaTime);
+                    transform.Rotate(Vector3.forward * RotateSpeed * Time.deltaTime);
+                }
+
+                if (_needReset)
+                {
+                    transform.position = ImageTagetShip.transform.position;
+                    _needReset = false;
+                }
+
+            }
+
+        }
+    }
 }

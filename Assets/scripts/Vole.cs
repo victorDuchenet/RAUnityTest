@@ -5,7 +5,7 @@ using Vuforia;
 
 namespace scripts
 {
-    public class Vole : MonoBehaviour
+    public class Vole : MonoBehaviour, ITrackableEventHandler
     {
 
         // Use this for initialization
@@ -14,11 +14,7 @@ namespace scripts
         public GameObject ImageTagetShip;
         public float RotateSpeed = 5;
 
-
-
-
-        private StateManager _sm;
-        private TrackableBehaviour _trackableBehaviourMadonna;
+        private TrackableBehaviour _mTrackableBehaviour;
         private bool _find;
 
         private Vector3 _initPosition;
@@ -37,50 +33,24 @@ namespace scripts
 
         void Start()
         {
-            _initPosition = ImageTagetShip.transform.position;
-            _sm = TrackerManager.Instance.GetStateManager();
-
-        }
-        private float time = 5;
-
-        private bool IsGameObjectTracked()
-        {
-            IEnumerable<TrackableBehaviour> activeTrackables = _sm.GetActiveTrackableBehaviours();
-
-            foreach (TrackableBehaviour trackableBehaviour in activeTrackables)
+            _mTrackableBehaviour = ImageTagetShip.GetComponent<TrackableBehaviour>();
+            if (_mTrackableBehaviour)
             {
-                if (trackableBehaviour.gameObject.Equals(ImageTagetShip))
-                {
-                    _trackableBehaviourMadonna = trackableBehaviour;
-                    return true;
-                }
-               
+                _mTrackableBehaviour.RegisterTrackableEventHandler(this);
             }
-            return false;
+
+            _initPosition = ImageTagetShip.transform.position;
         }
+
+
         // Update is called once per frame
         void Update()
         {
-            IEnumerable<TrackableBehaviour> activeTrackables = _sm.GetActiveTrackableBehaviours();
-
-            foreach (TrackableBehaviour trackableBehaviour in activeTrackables)
-            {
-                if (trackableBehaviour.gameObject.Equals(ImageTagetShip))
-                {
-                    _trackableBehaviourMadonna = trackableBehaviour;
-                    _find = true;
-                    break;
-                }
-                _find = false;
-            }
-
             if (_find)
             {
-                if (_trackableBehaviourMadonna.CurrentStatus == TrackableBehaviour.Status.TRACKED)
-                {
-                    transform.Translate(Vector3.forward * MovementSpeed * Time.deltaTime);
-                    transform.Rotate(Vector3.forward * RotateSpeed * Time.deltaTime);
-                }
+                transform.Translate(Vector3.forward * MovementSpeed * Time.deltaTime);
+                transform.Rotate(Vector3.forward * RotateSpeed * Time.deltaTime);
+
 
                 if (_needReset)
                 {
@@ -90,6 +60,22 @@ namespace scripts
 
             }
 
+        }
+
+        public void OnTrackableStateChanged(TrackableBehaviour.Status previousStatus, TrackableBehaviour.Status newStatus)
+        {
+            if (newStatus == TrackableBehaviour.Status.TRACKED ||
+                newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
+            {
+                _find = true;
+                Debug.Log("_find = true");
+            }
+            else
+            {
+                _find = false;
+                Debug.Log("_find = false");
+
+            }
         }
     }
 }
